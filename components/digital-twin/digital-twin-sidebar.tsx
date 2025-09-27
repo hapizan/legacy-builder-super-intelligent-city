@@ -276,35 +276,66 @@ export function DigitalTwinSidebar() {
       {/* Call Simulator & Layers */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* Emergency Chat Simulator */}
-        <Card className="border-orange-200 bg-orange-50/50">
+        <Card className="border-destructive/20 bg-gradient-to-br from-destructive/5 to-warning/5">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base text-orange-800">� Emergency Chat Monitor</CardTitle>
-              <Badge variant={callStatus === 'connected' ? 'default' : callStatus === 'ringing' ? 'destructive' : 'secondary'} className="text-xs">
+              <div className="flex items-center space-x-2">
+                <div className={`w-2 h-2 rounded-full ${
+                  callStatus === 'connected' ? 'bg-destructive animate-pulse' : 
+                  callStatus === 'ringing' ? 'bg-warning animate-bounce' : 
+                  'bg-muted-foreground'
+                }`} />
+                <CardTitle className="text-base text-foreground flex items-center space-x-2">
+                  <Phone className="w-4 h-4 text-destructive" />
+                  <span>Emergency Chat Monitor</span>
+                </CardTitle>
+              </div>
+              <Badge variant={
+                callStatus === 'connected' ? 'destructive' : 
+                callStatus === 'ringing' ? 'outline' : 
+                callStatus === 'ended' ? 'secondary' : 'outline'
+              } className="text-xs">
                 {callStatus === 'idle' && 'Ready'}
-                {callStatus === 'ringing' && 'Dialing 📞'}
-                {callStatus === 'connected' && 'Live Emergency Call'}
-                {callStatus === 'ended' && 'Call Completed'}
+                {callStatus === 'ringing' && (
+                  <span className="flex items-center space-x-1">
+                    <div className="w-1 h-1 bg-current rounded-full animate-ping" />
+                    <span>Connecting</span>
+                  </span>
+                )}
+                {callStatus === 'connected' && (
+                  <span className="flex items-center space-x-1">
+                    <div className="w-1 h-1 bg-current rounded-full animate-pulse" />
+                    <span>Live</span>
+                  </span>
+                )}
+                {callStatus === 'ended' && 'Complete'}
               </Badge>
             </div>
-            <CardDescription className="text-orange-700">Monitor victim-agent communications</CardDescription>
+            <CardDescription className="text-muted-foreground">
+              Real-time monitoring of emergency communications
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {/* Chat Messages Area */}
-            <div ref={chatScrollRef} className="bg-white rounded-lg border p-3 h-48 overflow-y-auto space-y-2">
+            <div ref={chatScrollRef} className="bg-card/50 backdrop-blur-sm rounded-lg border border-border/50 p-3 h-48 overflow-y-auto space-y-2 shadow-inner">
               {callStatus === 'idle' && (
-                <div className="text-center text-gray-500 text-sm mt-16">
-                  Click "Start Emergency Call" to begin monitoring
+                <div className="text-center text-muted-foreground text-sm mt-16 flex flex-col items-center space-y-2">
+                  <Phone className="w-6 h-6 text-muted-foreground/50" />
+                  <span>Click "Start Emergency Call" to begin monitoring</span>
                 </div>
               )}
               
               {callStatus === 'ringing' && (
-                <div className="text-center text-gray-600 text-sm mt-16">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <Phone className="w-5 h-5 animate-bounce text-blue-600" />
-                    <span className="animate-pulse">📞 Incoming Emergency Call...</span>
+                <div className="text-center text-foreground text-sm mt-16">
+                  <div className="flex items-center justify-center space-x-2 mb-3">
+                    <Phone className="w-5 h-5 animate-bounce text-destructive" />
+                    <span className="animate-pulse font-medium">Incoming Emergency Call...</span>
                   </div>
-                  <div className="text-xs text-gray-500">🔊 Ring... Ring... Ring...</div>
+                  <div className="text-xs text-muted-foreground flex items-center justify-center space-x-1">
+                    <div className="w-1 h-1 bg-warning rounded-full animate-pulse" />
+                    <span>Establishing connection</span>
+                    <div className="w-1 h-1 bg-warning rounded-full animate-pulse delay-200" />
+                  </div>
                 </div>
               )}
               
@@ -314,7 +345,7 @@ export function DigitalTwinSidebar() {
                     if (message.speaker === 'system') {
                       return (
                         <div key={index} className="text-center">
-                          <div className="text-xs text-gray-500 italic bg-gray-100 rounded-full px-3 py-1 inline-block">
+                          <div className="text-xs text-muted-foreground italic bg-muted/50 rounded-full px-3 py-1 inline-block border border-border/50">
                             {message.text}
                           </div>
                         </div>
@@ -332,21 +363,21 @@ export function DigitalTwinSidebar() {
                       <div key={index} className={`flex items-start space-x-2 ${!isVictim ? 'justify-end' : ''}`}>
                         {isVictim && (
                           <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                            isCurrentlyStreaming ? 'bg-red-200 animate-pulse' : 'bg-red-100'
-                          }`}>
-                            <AlertCircle className="w-3 h-3 text-red-600" />
+                            isCurrentlyStreaming ? 'bg-destructive/20 animate-pulse' : 'bg-destructive/10'
+                          } border border-destructive/20`}>
+                            <AlertCircle className="w-3 h-3 text-destructive" />
                           </div>
                         )}
                         <div className="flex-1 max-w-[85%]">
                           <div className={`${
                             isVictim 
-                              ? 'bg-red-50 border border-red-200' 
-                              : 'bg-blue-50 border border-blue-200'
-                          } rounded-lg p-2 ${isCurrentlyStreaming ? 'ring-2 ring-opacity-50 ' + (isVictim ? 'ring-red-300' : 'ring-blue-300') : ''}`}>
+                              ? 'bg-destructive/5 border border-destructive/20' 
+                              : 'bg-primary/5 border border-primary/20'
+                          } rounded-lg p-2 backdrop-blur-sm ${isCurrentlyStreaming ? 'ring-2 ring-opacity-50 ' + (isVictim ? 'ring-destructive/30' : 'ring-primary/30') : ''}`}>
                             <p className={`text-xs font-medium mb-1 ${
                               isVictim 
-                                ? 'text-red-800' 
-                                : 'text-blue-800 text-right'
+                                ? 'text-destructive' 
+                                : 'text-primary text-right'
                             }`}>
                               {isVictim ? 'Victim' : 'Agentic AI'}
                               {isCurrentlyStreaming && (
@@ -361,7 +392,7 @@ export function DigitalTwinSidebar() {
                               )}
                             </p>
                             <p className={`text-sm ${
-                              isVictim ? 'text-red-700' : 'text-blue-700'
+                              isVictim ? 'text-foreground' : 'text-foreground'
                             } ${isCurrentlyStreaming ? 'font-medium' : ''}`}>
                               {displayText}
                               {isCurrentlyStreaming && (
@@ -376,8 +407,8 @@ export function DigitalTwinSidebar() {
                             <div className={`flex items-center justify-between mt-1`}>
                               <p className={`text-xs ${
                                 isVictim 
-                                  ? 'text-red-500' 
-                                  : 'text-blue-500'
+                                  ? 'text-destructive/70' 
+                                  : 'text-primary/70'
                               }`}>
                                 {formatDuration(callDuration)}
                               </p>
@@ -385,20 +416,20 @@ export function DigitalTwinSidebar() {
                                 <div className="flex items-center space-x-1">
                                   {isPlaying && currentAudio?.src.includes(message.audioFile) && (
                                     <div className="flex space-x-1">
-                                      <div className="w-1 h-2 bg-green-500 animate-pulse rounded"></div>
-                                      <div className="w-1 h-3 bg-green-400 animate-pulse rounded delay-75"></div>
-                                      <div className="w-1 h-2 bg-green-500 animate-pulse rounded delay-150"></div>
+                                      <div className="w-1 h-2 bg-success animate-pulse rounded"></div>
+                                      <div className="w-1 h-3 bg-success/80 animate-pulse rounded delay-75"></div>
+                                      <div className="w-1 h-2 bg-success animate-pulse rounded delay-150"></div>
                                     </div>
                                   )}
-                                  <Volume2 className="w-3 h-3 text-gray-400" />
+                                  <Volume2 className="w-3 h-3 text-muted-foreground" />
                                 </div>
                               )}
                             </div>
                           </div>
                         </div>
                         {!isVictim && (
-                          <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                            <UserCheck className="w-3 h-3 text-blue-600" />
+                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 border border-primary/20">
+                            <UserCheck className="w-3 h-3 text-primary" />
                           </div>
                         )}
                       </div>
@@ -409,36 +440,36 @@ export function DigitalTwinSidebar() {
                   {typingIndicator && (
                     <div className={`flex items-start space-x-2 ${typingIndicator === 'agent' ? 'justify-end' : ''}`}>
                       {typingIndicator === 'victim' && (
-                        <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                          <AlertCircle className="w-3 h-3 text-red-600" />
+                        <div className="w-6 h-6 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0 border border-destructive/20">
+                          <AlertCircle className="w-3 h-3 text-destructive" />
                         </div>
                       )}
                       <div className="flex-1 max-w-[85%]">
                         <div className={`${
                           typingIndicator === 'victim' 
-                            ? 'bg-red-50 border border-red-200' 
-                            : 'bg-blue-50 border border-blue-200'
-                        } rounded-lg p-2 opacity-80`}>
+                            ? 'bg-destructive/5 border border-destructive/20' 
+                            : 'bg-primary/5 border border-primary/20'
+                        } rounded-lg p-2 opacity-80 backdrop-blur-sm`}>
                           <p className={`text-xs font-medium mb-1 ${
                             typingIndicator === 'victim' 
-                              ? 'text-red-800' 
-                              : 'text-blue-800 text-right'
+                              ? 'text-destructive' 
+                              : 'text-primary text-right'
                           }`}>
                             {typingIndicator === 'victim' ? 'Victim' : 'Agentic AI'}
                           </p>
                           <div className="flex items-center space-x-1">
-                            <span className="text-xs text-gray-500">Processing voice...</span>
+                            <span className="text-xs text-muted-foreground">Processing voice...</span>
                             <div className="flex space-x-1">
-                              <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
-                              <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-                              <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+                              <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce"></div>
+                              <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce delay-100"></div>
+                              <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce delay-200"></div>
                             </div>
                           </div>
                         </div>
                       </div>
                       {typingIndicator === 'agent' && (
-                        <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                          <UserCheck className="w-3 h-3 text-blue-600" />
+                        <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 border border-primary/20">
+                          <UserCheck className="w-3 h-3 text-primary" />
                         </div>
                       )}
                     </div>
@@ -447,10 +478,13 @@ export function DigitalTwinSidebar() {
               )}
 
               {callStatus === 'ended' && (
-                <div className="text-center text-gray-500 text-sm mt-12">
-                  <div className="mb-2">✅ Emergency call completed successfully</div>
-                  <div className="text-xs mb-2">Victim safely evacuated from Sky Park Cyberjaya</div>
-                  <div className="text-xs">Total Duration: {formatDuration(callDuration)}</div>
+                <div className="text-center text-foreground text-sm mt-12 space-y-2">
+                  <div className="flex items-center justify-center space-x-2 mb-3">
+                    <div className="w-2 h-2 bg-success rounded-full"></div>
+                    <span className="font-medium text-success">Emergency call completed successfully</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground mb-2">Victim safely evacuated from Sky Park Cyberjaya</div>
+                  <div className="text-xs text-muted-foreground">Total Duration: {formatDuration(callDuration)}</div>
                 </div>
               )}
             </div>

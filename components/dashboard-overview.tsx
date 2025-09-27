@@ -10,6 +10,9 @@ import { EnergyConsumption } from "@/components/energy-consumption"
 export function DashboardOverview() {
   return (
     <div className="space-y-6">
+      {/* Emergency Alerts Banner - Moved to Top */}
+      <EmergencyAlerts />
+
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard title="Total Buildings" value="2,847" change="+12" changeType="positive" icon="🏢" />
@@ -18,29 +21,7 @@ export function DashboardOverview() {
         <MetricCard title="Energy Usage" value="847 MW" change="-5.2%" changeType="positive" icon="⚡" />
       </div>
 
-      {/* Emergency Alerts Banner */}
-      <EmergencyAlerts />
-
-      {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* City Map Overview */}
-        <div className="lg:col-span-2">
-          <CityMap />
-        </div>
-
-        {/* System Status */}
-        <div className="space-y-6">
-          <SystemStatus />
-          <AIInsights />
-        </div>
-      </div>
-
-      {/* Analytics Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <TrafficFlow />
-        <EnergyConsumption />
-      </div>
-
+      {/* Navigation Cards - Moved Up */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="cursor-pointer hover:bg-muted/50 transition-colors group glow-blue">
           <CardHeader>
@@ -141,6 +122,30 @@ export function DashboardOverview() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Main Dashboard Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* AI Insights - Full Left Side */}
+        <div className="lg:col-span-1">
+          <AIInsights />
+        </div>
+
+        {/* City Map Overview */}
+        <div className="lg:col-span-2">
+          <CityMap />
+        </div>
+
+        {/* System Status */}
+        <div className="lg:col-span-1">
+          <SystemStatus />
+        </div>
+      </div>
+
+      {/* Analytics Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TrafficFlow />
+        <EnergyConsumption />
       </div>
 
       <Card>
